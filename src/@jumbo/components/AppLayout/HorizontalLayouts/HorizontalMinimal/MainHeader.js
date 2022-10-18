@@ -77,19 +77,102 @@ const MainHeader = () => {
           icon: <PostAdd />,
           link: '/sample-page',
         },
-        !authUser?.name === 'Admin'
-          ? {
-              name: 'Test2',
+        {
+          name: 'Test5',
+          type: 'collapse',
+          children: [
+            {
+              name: 'Test6',
               type: 'item',
               icon: <PostAdd />,
-              link: '/test-page',
-            }
-          : {},
+              link: '/sample-page',
+            },
+            {
+              name: 'Test 7',
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/sample-page',
+            },
+          ],
+        },
+        {
+          name: 'Test 8',
+          type: 'item',
+          icon: <PostAdd />,
+          link: '/sample-page',
+        },
+        {
+          name: 'Test2',
+          type: 'item',
+          icon: <PostAdd />,
+          link: '/test-page',
+        },
       ],
     },
     authUser?.name === 'Admin'
       ? {
-          name: 'Home',
+          name: 'Department',
+          type: 'collapse',
+          children: [
+            {
+              name: 'Medicine',
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/sample-page',
+            },
+
+            {
+              name: 'Surgery',
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/test-page',
+            },
+          ],
+        }
+      : {},
+    authUser?.name === 'Admin'
+      ? {
+          name: 'Doctor',
+          type: 'collapse',
+          children: [
+            {
+              name: 'Doctor List',
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/doctor-list',
+            },
+
+            {
+              name: 'Surgery',
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/test-page',
+            },
+          ],
+        }
+      : {},
+    {
+      name: 'Services',
+      type: 'collapse',
+      children: [
+        {
+          name: 'Medicine',
+          type: 'item',
+          icon: <PostAdd />,
+          link: '/sample-page',
+        },
+
+        {
+          name: 'Surgery',
+          type: 'item',
+          icon: <PostAdd />,
+          link: '/test-page',
+        },
+      ],
+    },
+    authUser?.name === 'Admin'
+      ? {
+          name: 'Home2',
           type: 'collapse',
           children: [
             {

@@ -1,7 +1,7 @@
 import AppSelectBox from '@jumbo/components/Common/formElements/AppSelectBox';
 import AppTextInput from '@jumbo/components/Common/formElements/AppTextInput';
 import GridContainer from '@jumbo/components/GridContainer';
-import { Box, Grid, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { useState } from 'react';
 const useStyles = makeStyles(theme => ({
@@ -117,6 +117,11 @@ const Appointment = () => {
               }}
               helperText={firstNameError}
             />
+          </Grid>
+          <Grid item alignItems="center">
+            <Button variant="contained" color="primary" size="small">
+              Submit
+            </Button>
           </Grid>
         </GridContainer>
       </Paper>

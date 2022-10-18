@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router';
 import { useLocation } from 'react-router-dom';
-import AdminPage from 'views/Admin/AdminPage';
+import DoctorAddForm from 'views/Doctor/form/DoctorAddForm';
 import Error404 from '../views/404';
 import SamplePage from '../views/SamplePage';
 import TestPage from '../views/TestPage/TestPage';
@@ -38,14 +38,15 @@ const Routes = () => {
   if (location.pathname === '' || location.pathname === '/') {
     return <Redirect to={'/sample-page'} />;
   } else if (authUser && location.pathname === '/signin') {
-    return <Redirect to={'/admin'} />;
+    return <Redirect to={'/sample-page'} />;
   }
 
   return (
     <React.Fragment>
       <Switch>
         <Route path="/sample-page" component={SamplePage} />
-        <RestrictedRoute path="/admin" component={AdminPage} />
+        {/* <RestrictedRoute path="/admin" component={AdminPage} /> */}
+        <Route path="/doctor-list" component={DoctorAddForm} />
         <Route path="/test-page" component={TestPage} />
         <Route path="/signin" component={Login} />
         <Route path="/signup" component={Register} />
