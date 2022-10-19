@@ -97,17 +97,16 @@ const CustomTab = () => {
         exercitationem, itaque consequatur repellat iste ratione? Est asperiores commodi, consectetur possimus quae similique
         cupiditate explicabo id, provident deleniti sunt! Et aperiam dolorem pariatur delectus, fugiat provident ad
         perspiciatis! Natus iure nam voluptate sed dicta quidem distinctio velit neque placeat temporibus!
-        <p>End Line</p>
       </TabPanel>
       <TabPanel value={value} index={1} className={classes.tabpanel}>
         <GridContainer>
-          <Grid item alignItems="center" className="bg-dark border-1" xs={12} sm={4} md={4} lg={4} xl={4}>
+          <Grid item className="bg-dark border-1" xs={12} sm={4} md={4} lg={4} xl={4}>
             <DoctorList />
           </Grid>
-          <Grid item alignItems="center" className="bg-dark border-1" xs={12} sm={4} md={4} lg={4} xl={4}>
+          <Grid item className="bg-dark border-1" xs={12} sm={4} md={4} lg={4} xl={4}>
             <DoctorList />
           </Grid>
-          <Grid item alignItems="center" className="bg-dark border-1" xs={12} sm={4} md={4} lg={4} xl={4}>
+          <Grid item className="bg-dark border-1" xs={12} sm={4} md={4} lg={4} xl={4}>
             <DoctorList />
           </Grid>
         </GridContainer>

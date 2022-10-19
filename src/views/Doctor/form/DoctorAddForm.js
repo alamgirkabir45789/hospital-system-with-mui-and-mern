@@ -1,5 +1,4 @@
 import CmtAvatar from '@coremat/CmtAvatar';
-import AppSelectBox from '@jumbo/components/Common/formElements/AppSelectBox';
 import AppTextInput from '@jumbo/components/Common/formElements/AppTextInput';
 import GridContainer from '@jumbo/components/GridContainer';
 import { Box, Button, Checkbox, FormControlLabel, Grid, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
@@ -21,6 +20,16 @@ const ddlItem = [
   { title: 'Office', slug: 'office' },
   { title: 'Other', slug: 'other' },
 ];
+const ddlDegree = [
+  { label: 'MBBS', value: 'MBBS' },
+  { label: 'BDS', value: 'BDS' },
+  { label: 'DMF', value: 'DMC' },
+];
+const ddlSpecialization = [
+  { label: 'Medicine', value: 'Medicine' },
+  { label: 'Paediatrics', value: 'Paediatrics' },
+  { label: 'Eye', value: 'Eye' },
+];
 const DoctorAddForm = () => {
   const classes = useStyles();
   const [firstName, setFirstName] = useState('');
@@ -31,10 +40,19 @@ const DoctorAddForm = () => {
   const [profile_pic, setProfile_pic] = useState('');
 
   const [state, setState] = useState({
+    name: '',
+    email: '',
+    contactNo: '',
+    bmdcReg: '',
+    details: '',
     departmentName: '',
     departmentId: '',
-    scheduleId: [],
-    scheduleName: [],
+    scheduleId: '',
+    scheduleName: '',
+    qualificationId: '',
+    qualificationName: '',
+    specializationId: '',
+    specializationName: '',
   });
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
@@ -42,7 +60,6 @@ const DoctorAddForm = () => {
       setProfile_pic(URL.createObjectURL(acceptedFiles[0]));
     },
   });
-  console.log(state);
 
   const onChangeDepartment = e => {
     const selectedDepartment = departments.find(dp => dp.value === e.target.value);
@@ -52,17 +69,30 @@ const DoctorAddForm = () => {
       departmentName: selectedDepartment.label,
     });
   };
-
-  const onScheduleChange = e => {
-    // const selectedSchedule = schedules.find(dp => dp.value === e.target.value);
-
-    const targetValue = e.target.value;
-    console.log(targetValue);
-    // console.log(selectedSchedule);
+  const onChangeSpecialization = e => {
+    const selectedSpecialization = ddlSpecialization.find(dp => dp.value === e.target.value);
     setState({
       ...state,
-      scheduleId: targetValue.value,
-      scheduleName: targetValue.label,
+      specializationId: selectedSpecialization.value,
+      specializationName: selectedSpecialization.label,
+    });
+  };
+  const onDegreeChange = e => {
+    const selectedDegree = ddlDegree.find(dp => dp.value === e.target.value);
+    setState({
+      ...state,
+      qualificationId: selectedDegree.value,
+      qualificationName: selectedDegree.label,
+    });
+  };
+
+  const onScheduleChange = e => {
+    const selectedSchedule = schedules.find(dp => dp.value === e.target.value);
+
+    setState({
+      ...state,
+      scheduleId: selectedSchedule.value,
+      scheduleName: selectedSchedule.label,
     });
   };
   const getAllDepartment = async () => {
@@ -80,6 +110,26 @@ const DoctorAddForm = () => {
     getAllSchedule();
   }, []);
 
+  const handleSubmit = () => {
+    const payload = {
+      name: state.name,
+      email: state.email,
+      contactNo: state.contactNo,
+      bmdcReg: state.bmdcReg,
+      message: state.details,
+      departmentName: state.departmentName,
+      department: state.departmentId,
+      schedule: state.scheduleId,
+      scheduleName: state.scheduleName,
+      qualification: state.qualificationId,
+      qualificationName: state.qualificationName,
+      specialization: state.specializationId,
+      specializationName: state.specializationName,
+      photo: '',
+    };
+    console.log(JSON.stringify(payload, null, 2));
+  };
+
   return (
     <Box className={classes.root}>
       <Paper square elevation={1}>
@@ -95,10 +145,9 @@ const DoctorAddForm = () => {
               fullWidth
               variant="outlined"
               label="Name"
-              value={firstName}
+              value={state.name}
               onChange={e => {
-                setFirstName(e.target.value);
-                setFirstNameError('');
+                setState({ ...state, name: e.target.value });
               }}
               helperText={firstNameError}
             />
@@ -109,10 +158,9 @@ const DoctorAddForm = () => {
               fullWidth
               variant="outlined"
               label="Email"
-              value={firstName}
+              value={state.email}
               onChange={e => {
-                setFirstName(e.target.value);
-                setFirstNameError('');
+                setState({ ...state, email: e.target.value });
               }}
               helperText={firstNameError}
             />
@@ -122,10 +170,9 @@ const DoctorAddForm = () => {
               fullWidth
               variant="outlined"
               label="Contact No"
-              value={firstName}
+              value={state.contactNo}
               onChange={e => {
-                setFirstName(e.target.value);
-                setFirstNameError('');
+                setState({ ...state, contactNo: e.target.value });
               }}
               helperText={firstNameError}
             />
@@ -136,10 +183,9 @@ const DoctorAddForm = () => {
               fullWidth
               variant="outlined"
               label="BMDC Reg"
-              value={firstName}
+              value={state.bmdcReg}
               onChange={e => {
-                setFirstName(e.target.value);
-                setFirstNameError('');
+                setState({ ...state, bmdcReg: e.target.value });
               }}
               helperText={firstNameError}
             />
@@ -172,12 +218,9 @@ const DoctorAddForm = () => {
               className={classes.textField}
               id="Schedule"
               label="Schedule"
-              SelectProps={{
-                multiple: true,
-                value: [],
-                onChange: onScheduleChange,
-              }}
+              value={state.scheduleId}
               variant="outlined"
+              onChange={onScheduleChange}
               size="small">
               <MenuItem value="">NONE</MenuItem>
               {schedules.map(option => (
@@ -188,28 +231,46 @@ const DoctorAddForm = () => {
             </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <AppSelectBox
+            <TextField
               fullWidth
-              data={ddlItem}
+              className={classes.textField}
+              id="degree"
+              select
               label="Degree"
-              valueKey="slug"
+              value={state.qualificationId}
+              onChange={e => {
+                onDegreeChange(e);
+              }}
               variant="outlined"
-              labelKey="title"
-              value={department}
-              onChange={e => onChangeDepartment(e)}
-            />
+              size="small">
+              <MenuItem value="">NONE</MenuItem>
+              {ddlDegree.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <AppSelectBox
+            <TextField
               fullWidth
-              data={ddlItem}
+              className={classes.textField}
+              id="specialization"
+              select
               label="Specialization"
-              valueKey="slug"
+              value={state.specializationId}
+              onChange={e => {
+                onChangeSpecialization(e);
+              }}
               variant="outlined"
-              labelKey="title"
-              value={department}
-              onChange={e => onChangeDepartment(e)}
-            />
+              size="small">
+              <MenuItem value="">NONE</MenuItem>
+              {ddlSpecialization.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
 
           <Grid item xs={12} sm={6}>
@@ -218,10 +279,9 @@ const DoctorAddForm = () => {
               variant="outlined"
               label="Description"
               multiline
-              value={firstName}
+              value={state.details}
               onChange={e => {
-                setFirstName(e.target.value);
-                setFirstNameError('');
+                setState({ ...state, details: e.target.value });
               }}
               helperText={firstNameError}
             />
@@ -235,7 +295,7 @@ const DoctorAddForm = () => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <Button variant="contained" color="primary" size="small">
+            <Button variant="contained" color="primary" size="small" onClick={handleSubmit}>
               Submit
             </Button>
           </Grid>

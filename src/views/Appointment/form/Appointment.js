@@ -1,27 +1,92 @@
-import AppSelectBox from '@jumbo/components/Common/formElements/AppSelectBox';
 import AppTextInput from '@jumbo/components/Common/formElements/AppTextInput';
 import GridContainer from '@jumbo/components/GridContainer';
-import { Box, Button, Grid, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Grid, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     flexGrow: 5,
   },
 }));
-const ddlItem = [
-  { title: 'Home', slug: 'home' },
-  { title: 'Office', slug: 'office' },
-  { title: 'Other', slug: 'other' },
-];
+
 const Appointment = () => {
   const classes = useStyles();
-  const [firstName, setFirstName] = useState('');
   const [firstNameError, setFirstNameError] = useState('');
-  const [department, setDepartment] = useState('');
+
+  const [state, setState] = useState({
+    name: '',
+    email: '',
+    contactNo: '',
+    age: '',
+    description: '',
+    address: '',
+    departmentName: '',
+    departmentId: '',
+    scheduleId: '',
+    scheduleName: '',
+    doctorId: '',
+    doctorName: '',
+    appointmentDate: '',
+    isCancelled: false,
+  });
+  const [departments, setDepartments] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const getAllDepartment = async () => {
+    const res = await axios.get('http://localhost:7000/api/department');
+    setDepartments(res.data.map(d => ({ ...d, label: d.name, value: d._id })));
+  };
+  useEffect(() => {
+    getAllDepartment();
+  }, []);
+  const getAllDoctorByDepartment = async departmentId => {
+    const res = await axios.get(`http://localhost:7000/api/doctor/department/${departmentId}`);
+    setDoctors(res.data.map(d => ({ ...d, label: d.name, value: d._id })));
+  };
+
   const onChangeDepartment = e => {
-    setDepartment(e.target.value);
+    const selectedDepartment = departments.find(dp => dp.value === e.target.value);
+    if (selectedDepartment) {
+      getAllDoctorByDepartment(selectedDepartment.value);
+      setState({
+        ...state,
+        departmentId: selectedDepartment.value,
+        departmentName: selectedDepartment.label,
+      });
+    }
+  };
+  const onDoctorChange = e => {
+    const selectedDoctor = doctors.find(dp => dp.value === e.target.value);
+    setState({
+      ...state,
+      doctorId: selectedDoctor.value,
+      doctorName: selectedDoctor.label,
+    });
+  };
+
+  const handleSubmit = async () => {
+    const payload = {
+      name: state.name,
+      email: state.email,
+      contactNo: state.contactNo,
+      age: state.age,
+      description: state.description,
+      address: 'abc',
+      departmentName: state.departmentName,
+      departmentId: state.departmentId,
+      scheduleId: state.scheduleId,
+      scheduleName: state.scheduleName,
+      doctorId: state.doctorId,
+      doctorName: state.doctorName,
+      appointmentDate: new Date(),
+      isCancelled: false,
+    };
+    console.log(JSON.stringify(payload, null, 2));
+    if (payload.departmentId) {
+      const res = await axios.post(`http://localhost:7000/api/appointment`);
+      console.log(res.status);
+    }
   };
   return (
     <Box className={classes.root}>
@@ -29,38 +94,56 @@ const Appointment = () => {
         <Typography align="center">Make Appointment</Typography>
         <GridContainer style={{ padding: '20px' }}>
           <Grid item xs={12} sm={6}>
-            <AppSelectBox
+            <TextField
               fullWidth
-              data={ddlItem}
+              className={classes.textField}
+              id="department"
+              select
               label="Department"
-              valueKey="slug"
+              value={state.departmentId}
+              onChange={e => {
+                onChangeDepartment(e);
+              }}
               variant="outlined"
-              labelKey="title"
-              value={department}
-              onChange={e => onChangeDepartment(e)}
-            />
+              size="small">
+              <MenuItem value="">NONE</MenuItem>
+              {departments.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <AppSelectBox
+            <TextField
               fullWidth
-              data={ddlItem}
+              className={classes.textField}
+              id="doctor"
+              select
               label="Doctor"
-              valueKey="slug"
+              value={state.doctorId}
+              onChange={e => {
+                onDoctorChange(e);
+              }}
               variant="outlined"
-              labelKey="title"
-              value={department}
-              onChange={e => onChangeDepartment(e)}
-            />
+              size="small">
+              <MenuItem value="">NONE</MenuItem>
+              {doctors.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
             <AppTextInput
               fullWidth
               variant="outlined"
               label="Name"
-              value={firstName}
+              multiline
+              value={state.name}
               onChange={e => {
-                setFirstName(e.target.value);
-                setFirstNameError('');
+                setState({ ...state, name: e.target.value });
               }}
               helperText={firstNameError}
             />
@@ -70,10 +153,9 @@ const Appointment = () => {
               fullWidth
               variant="outlined"
               label="Age"
-              value={firstName}
+              value={state.age}
               onChange={e => {
-                setFirstName(e.target.value);
-                setFirstNameError('');
+                setState({ ...state, age: e.target.value });
               }}
               helperText={firstNameError}
             />
@@ -83,10 +165,9 @@ const Appointment = () => {
               fullWidth
               variant="outlined"
               label="Email"
-              value={firstName}
+              value={state.email}
               onChange={e => {
-                setFirstName(e.target.value);
-                setFirstNameError('');
+                setState({ ...state, email: e.target.value });
               }}
               helperText={firstNameError}
             />
@@ -96,10 +177,9 @@ const Appointment = () => {
               fullWidth
               variant="outlined"
               label="Contact No"
-              value={firstName}
+              value={state.contactNo}
               onChange={e => {
-                setFirstName(e.target.value);
-                setFirstNameError('');
+                setState({ ...state, contactNo: e.target.value });
               }}
               helperText={firstNameError}
             />
@@ -110,16 +190,15 @@ const Appointment = () => {
               variant="outlined"
               label="Description"
               multiline
-              value={firstName}
+              value={state.description}
               onChange={e => {
-                setFirstName(e.target.value);
-                setFirstNameError('');
+                setState({ ...state, description: e.target.value });
               }}
               helperText={firstNameError}
             />
           </Grid>
-          <Grid item alignItems="center">
-            <Button variant="contained" color="primary" size="small">
+          <Grid item>
+            <Button variant="contained" color="primary" size="small" onClick={handleSubmit}>
               Submit
             </Button>
           </Grid>
