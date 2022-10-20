@@ -1,6 +1,7 @@
 import AppTextInput from '@jumbo/components/Common/formElements/AppTextInput';
 import GridContainer from '@jumbo/components/GridContainer';
 import { Box, Button, Grid, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
+import { KeyboardDatePicker } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -33,6 +34,7 @@ const Appointment = () => {
   });
   const [departments, setDepartments] = useState([]);
   const [doctors, setDoctors] = useState([]);
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
   const getAllDepartment = async () => {
     const res = await axios.get('http://localhost:7000/api/department');
     setDepartments(res.data.map(d => ({ ...d, label: d.name, value: d._id })));
@@ -65,6 +67,10 @@ const Appointment = () => {
     });
   };
 
+  const handleDateChange = date => {
+    setSelectedDate(date);
+  };
+
   const handleSubmit = async () => {
     const payload = {
       name: state.name,
@@ -84,7 +90,7 @@ const Appointment = () => {
     };
     console.log(JSON.stringify(payload, null, 2));
     if (payload.departmentId) {
-      const res = await axios.post(`http://localhost:7000/api/appointment`);
+      const res = await axios.post(`http://localhost:7000/api/appointment`, payload);
       console.log(res.status);
     }
   };
@@ -134,6 +140,17 @@ const Appointment = () => {
                 </MenuItem>
               ))}
             </TextField>
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <KeyboardDatePicker
+              id="date-picker-dialog"
+              label="Appointment Date"
+              variant="outlined"
+              fullWidth
+              format="MM/dd/yyyy"
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <AppTextInput
@@ -197,6 +214,7 @@ const Appointment = () => {
               helperText={firstNameError}
             />
           </Grid>
+
           <Grid item>
             <Button variant="contained" color="primary" size="small" onClick={handleSubmit}>
               Submit

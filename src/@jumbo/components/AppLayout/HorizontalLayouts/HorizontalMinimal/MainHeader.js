@@ -2,7 +2,6 @@ import { Box, darken, Hidden, Toolbar } from '@material-ui/core';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import { PostAdd } from '@material-ui/icons';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import SidebarToggleHandler from '../../../../../@coremat/CmtLayouts/Horizontal/SidebarToggleHandler';
 import CmtHorizontal from '../../../../../@coremat/CmtNavigation/Horizontal';
 import Logo from '../../partials/Logo';
@@ -63,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const MainHeader = () => {
-  const { authUser } = useSelector(({ auth }) => auth);
+  // const { authUser } = useSelector(({ auth }) => auth);
   const classes = useStyles();
 
   const minimalHorizontalMenus = [
@@ -109,48 +108,37 @@ const MainHeader = () => {
         },
       ],
     },
-    authUser?.name === 'Admin'
-      ? {
-          name: 'Department',
-          type: 'collapse',
-          children: [
-            {
-              name: 'Medicine',
-              type: 'item',
-              icon: <PostAdd />,
-              link: '/sample-page',
-            },
+    {
+      name: 'Department',
+      type: 'collapse',
+      children: [
+        {
+          name: 'Medicine',
+          type: 'item',
+          icon: <PostAdd />,
+          link: '/sample-page',
+        },
 
-            {
-              name: 'Surgery',
-              type: 'item',
-              icon: <PostAdd />,
-              link: '/test-page',
-            },
-          ],
-        }
-      : {},
-    authUser?.name === 'Admin'
-      ? {
-          name: 'Doctor',
-          type: 'collapse',
-          children: [
-            {
-              name: 'Doctor List',
-              type: 'item',
-              icon: <PostAdd />,
-              link: '/doctor-list',
-            },
-
-            {
-              name: 'Surgery',
-              type: 'item',
-              icon: <PostAdd />,
-              link: '/test-page',
-            },
-          ],
-        }
-      : {},
+        {
+          name: 'Surgery',
+          type: 'item',
+          icon: <PostAdd />,
+          link: '/test-page',
+        },
+      ],
+    },
+    {
+      name: 'Doctor',
+      type: 'collapse',
+      children: [
+        {
+          name: 'Doctor Add',
+          type: 'item',
+          icon: <PostAdd />,
+          link: '/doctor-list',
+        },
+      ],
+    },
     {
       name: 'Services',
       type: 'collapse',
@@ -170,27 +158,25 @@ const MainHeader = () => {
         },
       ],
     },
-    authUser?.name === 'Admin'
-      ? {
-          name: 'Home2',
-          type: 'collapse',
-          children: [
-            {
-              name: 'Test1',
-              type: 'item',
-              icon: <PostAdd />,
-              link: '/sample-page',
-            },
+    {
+      name: 'Home2',
+      type: 'collapse',
+      children: [
+        {
+          name: 'Test1',
+          type: 'item',
+          icon: <PostAdd />,
+          link: '/sample-page',
+        },
 
-            {
-              name: 'Test2',
-              type: 'item',
-              icon: <PostAdd />,
-              link: '/test-page',
-            },
-          ],
-        }
-      : {},
+        {
+          name: 'Test2',
+          type: 'item',
+          icon: <PostAdd />,
+          link: '/test-page',
+        },
+      ],
+    },
   ];
   return (
     <Toolbar className={classes.root} style={{ color: 'black' }}>

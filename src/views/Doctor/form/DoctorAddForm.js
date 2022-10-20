@@ -30,13 +30,25 @@ const ddlSpecialization = [
   { label: 'Paediatrics', value: 'Paediatrics' },
   { label: 'Eye', value: 'Eye' },
 ];
+
+const ddlDays = [
+  { label: 'Saterday', value: 'Saterday', isChecked: false },
+  { label: 'Sunday', value: 'Sunday', isChecked: false },
+  { label: 'Monday', value: 'Monday', isChecked: false },
+  { label: 'Tuesday', value: 'Tuesday', isChecked: false },
+  { label: 'Wednesday', value: 'Wednesday', isChecked: false },
+  { label: 'Thusday', value: 'Thusday', isChecked: false },
+  { label: 'Friday', value: 'Friday', isChecked: false },
+];
 const DoctorAddForm = () => {
   const classes = useStyles();
   const [firstName, setFirstName] = useState('');
   const [firstNameError, setFirstNameError] = useState('');
   const [departments, setDepartments] = useState([]);
   const [schedules, setSchedules] = useState([]);
-  const [department, setDepartment] = useState('');
+  const [isAllScheduleCheck, setIsAllScheduleCheck] = useState(false);
+  const [isCheckedAllDays, setIsCheckedAllDays] = useState(false);
+  const [daysDropdown, setDaysDropdown] = useState(ddlDays);
   const [profile_pic, setProfile_pic] = useState('');
 
   const [state, setState] = useState({
@@ -47,8 +59,8 @@ const DoctorAddForm = () => {
     details: '',
     departmentName: '',
     departmentId: '',
-    scheduleId: '',
-    scheduleName: '',
+    schedule: [],
+    days: [],
     qualificationId: '',
     qualificationName: '',
     specializationId: '',
@@ -85,14 +97,71 @@ const DoctorAddForm = () => {
       qualificationName: selectedDegree.label,
     });
   };
+  const onChangeAllDays = e => {
+    const { checked } = e.target;
+    const _daysDropdown = [...daysDropdown];
+    if (checked) {
+      const checkAll = _daysDropdown.map(d => ({ ...d, isChecked: checked }));
+      setIsCheckedAllDays(!isCheckedAllDays);
+      setDaysDropdown(checkAll);
+    } else if (!checked) {
+      const unCheckedAll = _daysDropdown.map(d => ({ ...d, isChecked: checked }));
+      setIsCheckedAllDays(!isCheckedAllDays);
+      setDaysDropdown(unCheckedAll);
+    }
+  };
 
-  const onScheduleChange = e => {
-    const selectedSchedule = schedules.find(dp => dp.value === e.target.value);
-
+  const onChechDays = (e, index) => {
+    const { checked } = e.target;
+    const _daysDropdown = [...daysDropdown];
+    const checkedItem = _daysDropdown[index];
+    checkedItem.isChecked = checked;
+    _daysDropdown[index] = checkedItem;
+    const isAllItemChecked = _daysDropdown.every(e => e.isChecked);
+    if (isAllItemChecked) {
+      setIsCheckedAllDays(!isCheckedAllDays);
+    } else {
+      setIsCheckedAllDays(false);
+    }
+    const checkedFilteredDays = _daysDropdown.filter(sc => sc.isChecked);
+    const selectedDays = checkedFilteredDays.map(i => ({ daysId: i.value, daysName: i.label }));
+    setDaysDropdown(_daysDropdown);
     setState({
       ...state,
-      scheduleId: selectedSchedule.value,
-      scheduleName: selectedSchedule.label,
+      days: selectedDays,
+    });
+  };
+  const onChangeAllScheduleCheck = e => {
+    const { checked } = e.target;
+    const _schedules = [...schedules];
+    if (checked) {
+      const checkAll = _schedules.map(sc => ({ ...sc, isChecked: checked }));
+      setIsAllScheduleCheck(!isAllScheduleCheck);
+      setSchedules(checkAll);
+    } else if (!checked) {
+      const unCheckedAll = _schedules.map(sc => ({ ...sc, isChecked: false }));
+      setIsAllScheduleCheck(!isAllScheduleCheck);
+      setSchedules(unCheckedAll);
+    }
+  };
+  const onScheduleChange = (e, index) => {
+    const { checked } = e.target;
+    const _schedules = [...schedules];
+    const checkedItem = _schedules[index];
+    checkedItem.isChecked = checked;
+    _schedules[index] = checkedItem;
+    const isAllItemChecked = _schedules.every(e => e.isChecked);
+    if (isAllItemChecked) {
+      setIsAllScheduleCheck(!isAllScheduleCheck);
+    } else {
+      setIsAllScheduleCheck(false);
+    }
+    const checkedFilteredSchedule = _schedules.filter(sc => sc.isChecked);
+    const selectedSchedule = checkedFilteredSchedule.map(i => ({ scheduleId: i._id, scheduleName: i.startTime }));
+    setSchedules(_schedules);
+    setState({
+      ...state,
+      schedule: selectedSchedule,
     });
   };
   const getAllDepartment = async () => {
@@ -104,13 +173,15 @@ const DoctorAddForm = () => {
   }, []);
   const getAllSchedule = async () => {
     const res = await axios.get('http://localhost:7000/api/schedule');
-    setSchedules(res.data.map(d => ({ ...d, label: d.startTime, value: d._id })));
+    setSchedules(res.data.map(d => ({ ...d, label: d.startTime, value: d._id, isChecked: false })));
   };
   useEffect(() => {
     getAllSchedule();
   }, []);
-
-  const handleSubmit = () => {
+  const handleCheckSchedule = (e, index) => {
+    console.log({ e, index });
+  };
+  const handleSubmit = async () => {
     const payload = {
       name: state.name,
       email: state.email,
@@ -119,8 +190,8 @@ const DoctorAddForm = () => {
       message: state.details,
       departmentName: state.departmentName,
       department: state.departmentId,
-      schedule: state.scheduleId,
-      scheduleName: state.scheduleName,
+      schedule: state.schedule,
+      days: state.days,
       qualification: state.qualificationId,
       qualificationName: state.qualificationName,
       specialization: state.specializationId,
@@ -128,6 +199,11 @@ const DoctorAddForm = () => {
       photo: '',
     };
     console.log(JSON.stringify(payload, null, 2));
+    if (payload.bmdcReg && payload.department) {
+      return;
+      const res = await axios.post(`http://localhost:7000/api/doctor`, payload);
+      console.log(res);
+    }
   };
 
   return (
@@ -211,7 +287,7 @@ const DoctorAddForm = () => {
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
               select
@@ -229,7 +305,7 @@ const DoctorAddForm = () => {
                 </MenuItem>
               ))}
             </TextField>
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
@@ -273,7 +349,7 @@ const DoctorAddForm = () => {
             </TextField>
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <AppTextInput
               fullWidth
               variant="outlined"
@@ -286,6 +362,59 @@ const DoctorAddForm = () => {
               helperText={firstNameError}
             />
           </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <Typography>Select Days</Typography>
+            <FormControlLabel
+              key="day"
+              control={
+                <Checkbox checked={isCheckedAllDays} name="checkedB" color="primary" onChange={e => onChangeAllDays(e)} />
+              }
+              label="Select All"
+            />
+            {daysDropdown?.map((d, index) => (
+              <FormControlLabel
+                key={d.value}
+                control={
+                  <Checkbox checked={d.isChecked} name="checkedB" color="primary" onChange={e => onChechDays(e, index)} />
+                }
+                // style={{ display: 'block' }}
+                label={d.label}
+              />
+            ))}
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography>Select Schedule</Typography>
+            <FormControlLabel
+              key="schedule"
+              control={
+                <Checkbox
+                  checked={isAllScheduleCheck}
+                  name="checkedB"
+                  color="primary"
+                  onChange={e => onChangeAllScheduleCheck(e)}
+                />
+              }
+              label="Select All"
+            />
+
+            {schedules?.map((sc, index) => (
+              <FormControlLabel
+                key={sc._id}
+                control={
+                  <Checkbox
+                    checked={sc.isChecked}
+                    name="checkedB"
+                    color="primary"
+                    onChange={e => onScheduleChange(e, index)}
+                  />
+                }
+                style={{ display: 'block' }}
+                label={`${sc.startTime}-${sc.endTime}`}
+              />
+            ))}
+          </Grid>
+
           <Grid item xs={12} sm={6}>
             <FormControlLabel
               control={<Checkbox checked={false} name="checkedB" color="primary" />}
@@ -293,8 +422,7 @@ const DoctorAddForm = () => {
               disabled
             />
           </Grid>
-
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={6} sm={6}>
             <Button variant="contained" color="primary" size="small" onClick={handleSubmit}>
               Submit
             </Button>
