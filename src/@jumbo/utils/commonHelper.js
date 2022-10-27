@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 export const capitalizeFLetter = string => {
   return string[0].toUpperCase() + string.slice(1);
@@ -71,4 +72,34 @@ export const useDebounce = (value, delay) => {
   );
 
   return debouncedValue;
+};
+
+export const notify = action => {
+  if (action === 'success') {
+    return Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title: 'Success',
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  } else if (action === 'error') {
+    return Swal.fire({
+      position: 'top-end',
+      icon: 'error',
+      title: 'Some thing went wrong!!!',
+
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  } else if (action === 'warning') {
+    return Swal.fire({
+      position: 'top-end',
+      icon: 'warning',
+      title: 'No Data found',
+
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
 };

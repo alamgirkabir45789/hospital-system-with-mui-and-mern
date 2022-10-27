@@ -1,10 +1,13 @@
 import AppTextInput from '@jumbo/components/Common/formElements/AppTextInput';
 import GridContainer from '@jumbo/components/GridContainer';
-import { Box, Button, Grid, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
+import { notify } from '@jumbo/utils/commonHelper';
+import { Box, Button, Checkbox, FormControlLabel, Grid, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
+import Moment from 'moment';
 import React, { useEffect, useState } from 'react';
+
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -29,12 +32,15 @@ const Appointment = () => {
     scheduleName: '',
     doctorId: '',
     doctorName: '',
-    appointmentDate: '',
+    appointmentDate: Moment(new Date()).format('yyyy-MM-DD'),
     isCancelled: false,
   });
   const [departments, setDepartments] = useState([]);
   const [doctors, setDoctors] = useState([]);
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [doctorsSchedule, setDoctorsSchedule] = useState([]);
+  const [doctorsDay, setDoctorsDay] = useState(null);
+  const [doctorsDayWiseSchedule, setDoctorsDayWiseSchedule] = useState([]);
+  console.log(doctorsDayWiseSchedule);
   const getAllDepartment = async () => {
     const res = await axios.get('http://localhost:7000/api/department');
     setDepartments(res.data.map(d => ({ ...d, label: d.name, value: d._id })));
@@ -60,6 +66,9 @@ const Appointment = () => {
   };
   const onDoctorChange = e => {
     const selectedDoctor = doctors.find(dp => dp.value === e.target.value);
+    // console.log(selectedDoctor.day.map(i => JSON.parse(i)));
+    setDoctorsSchedule(selectedDoctor.schedule);
+    setDoctorsDay(selectedDoctor?.day?.map(d => JSON.parse(d)));
     setState({
       ...state,
       doctorId: selectedDoctor.value,
@@ -68,10 +77,43 @@ const Appointment = () => {
   };
 
   const handleDateChange = date => {
-    setSelectedDate(date);
-  };
+    const selectedAppointmentDate = Moment(date).format('yyyy-MM-DD');
+    const day = Moment(date).format('dddd');
 
+    const isDaysExist = doctorsDay?.find(dd => dd.daysName === day);
+    if (isDaysExist) {
+      const listedSchedule = isDaysExist?.schedule?.map(sc => ({ ...sc, isChecked: false }));
+      setDoctorsDayWiseSchedule(listedSchedule);
+    } else {
+      notify('warning');
+    }
+    setState({ ...state, appointmentDate: selectedAppointmentDate });
+  };
+  const onScheduleChange = (e, sc) => {
+    const { checked } = e.target;
+    let schedule = sc;
+    schedule.isChecked = checked;
+    console.log(schedule);
+    const isCheckedSchedule = doctorsDayWiseSchedule.every(e => e.isChecked);
+    if (isCheckedSchedule) {
+      schedule.isChecked = !checked;
+    }
+    const modifiedDoctorsDayWiseSchedule = doctorsDayWiseSchedule.map(m => ({ ...m, schedule }));
+    setDoctorsDayWiseSchedule(modifiedDoctorsDayWiseSchedule);
+    setState({ ...state, scheduleId: schedule.scheduleId, scheduleName: schedule.scheduleName });
+    // const _doctorsDayWiseSchedule = [...doctorsDayWiseSchedule];
+    // const selectedSchedule = _doctorsDayWiseSchedule[index];
+    // selectedSchedule.isChecked = checked;
+    // // selectedSchedule[index] = selectedSchedule;
+    // const dt = _doctorsDayWiseSchedule.find(f => f.isChecked);
+    // _doctorsDayWiseSchedule.map(m => ({ ...m, dt }));
+    // setDoctorsDayWiseSchedule(_doctorsDayWiseSchedule);
+  };
   const handleSubmit = async () => {
+    const scheduleObj = {
+      scheduleId: state.scheduleId,
+      scheduleName: state.scheduleName,
+    };
     const payload = {
       name: state.name,
       email: state.email,
@@ -81,8 +123,9 @@ const Appointment = () => {
       address: 'abc',
       departmentName: state.departmentName,
       departmentId: state.departmentId,
-      scheduleId: state.scheduleId,
-      scheduleName: state.scheduleName,
+      // scheduleId: state.scheduleId,
+      // scheduleName: state.scheduleName,
+      schedule: Object.assign({}, scheduleObj),
       doctorId: state.doctorId,
       doctorName: state.doctorName,
       appointmentDate: new Date(),
@@ -91,7 +134,9 @@ const Appointment = () => {
     console.log(JSON.stringify(payload, null, 2));
     if (payload.departmentId) {
       const res = await axios.post(`http://localhost:7000/api/appointment`, payload);
-      console.log(res.status);
+      if (res.status === 200) {
+        notify('success');
+      }
     }
   };
   return (
@@ -148,10 +193,36 @@ const Appointment = () => {
               variant="outlined"
               fullWidth
               format="MM/dd/yyyy"
-              value={selectedDate}
+              value={state.appointmentDate}
               onChange={handleDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
             />
           </Grid>
+          {doctorsDayWiseSchedule.length > 0 && (
+            <>
+              <Typography component="h6">Available Schedule</Typography>
+
+              <Grid item xs={12} sm={12} container direction="row" justifyContent="flex-start" alignItems="center">
+                {doctorsDayWiseSchedule?.map(sc => (
+                  <FormControlLabel
+                    key={sc.scheduleId}
+                    control={
+                      <Checkbox
+                        checked={sc.isChecked}
+                        name="checkedB"
+                        color="primary"
+                        onChange={e => onScheduleChange(e, sc)}
+                      />
+                    }
+                    style={{ display: 'block' }}
+                    label={`${sc.scheduleName}`}
+                  />
+                ))}
+              </Grid>
+            </>
+          )}
           <Grid item xs={12} sm={6}>
             <AppTextInput
               fullWidth

@@ -1,11 +1,26 @@
-import CmtAvatar from '@coremat/CmtAvatar';
 import AppTextInput from '@jumbo/components/Common/formElements/AppTextInput';
 import GridContainer from '@jumbo/components/GridContainer';
-import { Box, Button, Checkbox, FormControlLabel, Grid, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
+import { notify } from '@jumbo/utils/commonHelper';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  MenuItem,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import React, { Fragment, useEffect, useState } from 'react';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -42,14 +57,15 @@ const ddlDays = [
 ];
 const DoctorAddForm = () => {
   const classes = useStyles();
-  const [firstName, setFirstName] = useState('');
   const [firstNameError, setFirstNameError] = useState('');
   const [departments, setDepartments] = useState([]);
   const [schedules, setSchedules] = useState([]);
   const [isAllScheduleCheck, setIsAllScheduleCheck] = useState(false);
-  const [isCheckedAllDays, setIsCheckedAllDays] = useState(false);
+
   const [daysDropdown, setDaysDropdown] = useState(ddlDays);
-  const [profile_pic, setProfile_pic] = useState('');
+  const [file, setFile] = useState();
+  const [fileName, setFileName] = useState();
+  const [selectedDaysAndSchedule, setSelectedDaysAndSchedule] = useState([]);
 
   const [state, setState] = useState({
     name: '',
@@ -59,20 +75,47 @@ const DoctorAddForm = () => {
     details: '',
     departmentName: '',
     departmentId: '',
+    scheduleId: '',
+    scheduleName: '',
+    daysId: '',
+    daysName: '',
     schedule: [],
     days: [],
+    photo: '',
     qualificationId: '',
     qualificationName: '',
     specializationId: '',
     specializationName: '',
   });
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: 'image/*',
-    onDrop: acceptedFiles => {
-      setProfile_pic(URL.createObjectURL(acceptedFiles[0]));
-    },
-  });
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   accept: 'image/*',
+  //   onDrop: acceptedFiles => {
+  //     setProfile_pic(URL.createObjectURL(acceptedFiles[0]));
+  //   },
+  // });
 
+  const resetInitialState = () => {
+    return {
+      name: '',
+      email: '',
+      contactNo: '',
+      bmdcReg: '',
+      details: '',
+      departmentName: '',
+      departmentId: '',
+      schedule: [],
+      days: [],
+      photo: '',
+      qualificationId: '',
+      qualificationName: '',
+      specializationId: '',
+      specializationName: '',
+    };
+  };
+  const onFileChange = e => {
+    setFile(e.target.files[0]);
+    setFileName(e.target.files[0].name);
+  };
   const onChangeDepartment = e => {
     const selectedDepartment = departments.find(dp => dp.value === e.target.value);
     setState({
@@ -97,52 +140,46 @@ const DoctorAddForm = () => {
       qualificationName: selectedDegree.label,
     });
   };
-  const onChangeAllDays = e => {
-    const { checked } = e.target;
-    const _daysDropdown = [...daysDropdown];
-    if (checked) {
-      const checkAll = _daysDropdown.map(d => ({ ...d, isChecked: checked }));
-      setIsCheckedAllDays(!isCheckedAllDays);
-      setDaysDropdown(checkAll);
-    } else if (!checked) {
-      const unCheckedAll = _daysDropdown.map(d => ({ ...d, isChecked: checked }));
-      setIsCheckedAllDays(!isCheckedAllDays);
-      setDaysDropdown(unCheckedAll);
-    }
-  };
-
-  const onChechDays = (e, index) => {
-    const { checked } = e.target;
-    const _daysDropdown = [...daysDropdown];
-    const checkedItem = _daysDropdown[index];
-    checkedItem.isChecked = checked;
-    _daysDropdown[index] = checkedItem;
-    const isAllItemChecked = _daysDropdown.every(e => e.isChecked);
-    if (isAllItemChecked) {
-      setIsCheckedAllDays(!isCheckedAllDays);
-    } else {
-      setIsCheckedAllDays(false);
-    }
-    const checkedFilteredDays = _daysDropdown.filter(sc => sc.isChecked);
-    const selectedDays = checkedFilteredDays.map(i => ({ daysId: i.value, daysName: i.label }));
-    setDaysDropdown(_daysDropdown);
+  const onChangeDays = e => {
+    const selectedDays = ddlDays.find(dp => dp.value === e.target.value);
     setState({
       ...state,
-      days: selectedDays,
+      daysId: selectedDays.value,
+      daysName: selectedDays.label,
     });
   };
+
   const onChangeAllScheduleCheck = e => {
     const { checked } = e.target;
     const _schedules = [...schedules];
     if (checked) {
-      const checkAll = _schedules.map(sc => ({ ...sc, isChecked: checked }));
+      const checkAllSchedule = _schedules.map(sc => ({ ...sc, isChecked: checked }));
       setIsAllScheduleCheck(!isAllScheduleCheck);
-      setSchedules(checkAll);
+      setSchedules(checkAllSchedule);
+      const filteredData = checkAllSchedule.filter(f => f.isChecked);
+      const selectedScheduleData = filteredData.map(sc => ({ scheduleId: sc._id, scheduleName: sc.startTime }));
+      setState({
+        ...state,
+        schedule: selectedScheduleData,
+      });
     } else if (!checked) {
       const unCheckedAll = _schedules.map(sc => ({ ...sc, isChecked: false }));
       setIsAllScheduleCheck(!isAllScheduleCheck);
       setSchedules(unCheckedAll);
+      setState({
+        ...state,
+        schedule: [],
+      });
     }
+  };
+  const handleAddDaysAndSchedule = e => {
+    e.preventDefault();
+    const payload = {
+      daysId: state.daysId,
+      daysName: state.daysName,
+      schedule: state.schedule,
+    };
+    setSelectedDaysAndSchedule([...selectedDaysAndSchedule, payload]);
   };
   const onScheduleChange = (e, index) => {
     const { checked } = e.target;
@@ -190,19 +227,48 @@ const DoctorAddForm = () => {
       message: state.details,
       departmentName: state.departmentName,
       department: state.departmentId,
-      schedule: state.schedule,
-      days: state.days,
+      //schedule: state.schedule,
+      // days: state.days,
+      // photo: state.photo,
       qualification: state.qualificationId,
       qualificationName: state.qualificationName,
       specialization: state.specializationId,
       specializationName: state.specializationName,
-      photo: '',
     };
     console.log(JSON.stringify(payload, null, 2));
-    if (payload.bmdcReg && payload.department) {
-      return;
-      const res = await axios.post(`http://localhost:7000/api/doctor`, payload);
-      console.log(res);
+    const flattenedSelectedDayAndSchedule = selectedDaysAndSchedule?.flat();
+    const dayList = flattenedSelectedDayAndSchedule?.map(d => ({
+      daysId: d.daysId,
+      daysName: d.daysName,
+      schedule: d.schedule.map(sc => ({ scheduleId: sc.scheduleId, scheduleName: sc.scheduleName })),
+    }));
+    const scheduleList = flattenedSelectedDayAndSchedule?.map(s =>
+      s.schedule.map(s => ({
+        scheduleId: s.scheduleId,
+        scheduleName: s.scheduleName,
+      })),
+    );
+
+    let form_data = new FormData();
+    for (let key in payload) {
+      form_data.append(key, payload[key]);
+    }
+
+    scheduleList.forEach((val, idx, arr) => {
+      form_data.append('schedule[]', JSON.stringify(arr[idx]));
+    });
+    dayList.forEach((val, idx, arr) => {
+      form_data.append('day[]', JSON.stringify(arr[idx]));
+    });
+
+    if (file) {
+      form_data.append('photo', file, fileName);
+
+      const res = await axios.post(`http://localhost:7000/api/doctor`, form_data);
+      if (res.status === 200) {
+        notify('success');
+        resetInitialState();
+      }
     }
   };
 
@@ -210,84 +276,84 @@ const DoctorAddForm = () => {
     <Box className={classes.root}>
       <Paper square elevation={1}>
         <Typography align="center">Create Doctor</Typography>
+        <form encType="multipart/form-data">
+          <GridContainer style={{ padding: '20px' }}>
+            <Grid item xs={12} sm={6}>
+              <input type="file" name="photo" id="photo" onChange={e => onFileChange(e)} />
+              {/* <CmtAvatar size={40} src={profile_pic} /> */}
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <AppTextInput
+                fullWidth
+                variant="outlined"
+                label="Name"
+                value={state.name}
+                onChange={e => {
+                  setState({ ...state, name: e.target.value });
+                }}
+                helperText={firstNameError}
+              />
+            </Grid>
 
-        <GridContainer style={{ padding: '20px' }}>
-          <Grid item xs={12} sm={6} {...getRootProps()}>
-            <input {...getInputProps()} />
-            <CmtAvatar size={40} src={profile_pic} />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <AppTextInput
-              fullWidth
-              variant="outlined"
-              label="Name"
-              value={state.name}
-              onChange={e => {
-                setState({ ...state, name: e.target.value });
-              }}
-              helperText={firstNameError}
-            />
-          </Grid>
+            <Grid item xs={12} sm={6}>
+              <AppTextInput
+                fullWidth
+                variant="outlined"
+                label="Email"
+                value={state.email}
+                onChange={e => {
+                  setState({ ...state, email: e.target.value });
+                }}
+                helperText={firstNameError}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <AppTextInput
+                fullWidth
+                variant="outlined"
+                label="Contact No"
+                value={state.contactNo}
+                onChange={e => {
+                  setState({ ...state, contactNo: e.target.value });
+                }}
+                helperText={firstNameError}
+              />
+            </Grid>
 
-          <Grid item xs={12} sm={6}>
-            <AppTextInput
-              fullWidth
-              variant="outlined"
-              label="Email"
-              value={state.email}
-              onChange={e => {
-                setState({ ...state, email: e.target.value });
-              }}
-              helperText={firstNameError}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <AppTextInput
-              fullWidth
-              variant="outlined"
-              label="Contact No"
-              value={state.contactNo}
-              onChange={e => {
-                setState({ ...state, contactNo: e.target.value });
-              }}
-              helperText={firstNameError}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <AppTextInput
-              fullWidth
-              variant="outlined"
-              label="BMDC Reg"
-              value={state.bmdcReg}
-              onChange={e => {
-                setState({ ...state, bmdcReg: e.target.value });
-              }}
-              helperText={firstNameError}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              className={classes.textField}
-              id="department"
-              select
-              label="Department"
-              value={state.departmentId}
-              onChange={e => {
-                onChangeDepartment(e);
-              }}
-              variant="outlined"
-              size="small">
-              <MenuItem value="">NONE</MenuItem>
-              {departments.map(option => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          {/* <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6}>
+              <AppTextInput
+                fullWidth
+                variant="outlined"
+                label="BMDC Reg"
+                value={state.bmdcReg}
+                onChange={e => {
+                  setState({ ...state, bmdcReg: e.target.value });
+                }}
+                helperText={firstNameError}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                className={classes.textField}
+                id="department"
+                select
+                label="Department"
+                value={state.departmentId}
+                onChange={e => {
+                  onChangeDepartment(e);
+                }}
+                variant="outlined"
+                size="small">
+                <MenuItem value="">NONE</MenuItem>
+                {departments.map(option => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            {/* <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
               select
@@ -306,128 +372,162 @@ const DoctorAddForm = () => {
               ))}
             </TextField>
           </Grid> */}
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              className={classes.textField}
-              id="degree"
-              select
-              label="Degree"
-              value={state.qualificationId}
-              onChange={e => {
-                onDegreeChange(e);
-              }}
-              variant="outlined"
-              size="small">
-              <MenuItem value="">NONE</MenuItem>
-              {ddlDegree.map(option => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              className={classes.textField}
-              id="specialization"
-              select
-              label="Specialization"
-              value={state.specializationId}
-              onChange={e => {
-                onChangeSpecialization(e);
-              }}
-              variant="outlined"
-              size="small">
-              <MenuItem value="">NONE</MenuItem>
-              {ddlSpecialization.map(option => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                className={classes.textField}
+                id="degree"
+                select
+                label="Degree"
+                value={state.qualificationId}
+                onChange={e => {
+                  onDegreeChange(e);
+                }}
+                variant="outlined"
+                size="small">
+                <MenuItem value="">NONE</MenuItem>
+                {ddlDegree.map(option => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                className={classes.textField}
+                id="specialization"
+                select
+                label="Specialization"
+                value={state.specializationId}
+                onChange={e => {
+                  onChangeSpecialization(e);
+                }}
+                variant="outlined"
+                size="small">
+                <MenuItem value="">NONE</MenuItem>
+                {ddlSpecialization.map(option => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
 
-          <Grid item xs={12} sm={12}>
-            <AppTextInput
-              fullWidth
-              variant="outlined"
-              label="Description"
-              multiline
-              value={state.details}
-              onChange={e => {
-                setState({ ...state, details: e.target.value });
-              }}
-              helperText={firstNameError}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <Typography>Select Days</Typography>
-            <FormControlLabel
-              key="day"
-              control={
-                <Checkbox checked={isCheckedAllDays} name="checkedB" color="primary" onChange={e => onChangeAllDays(e)} />
-              }
-              label="Select All"
-            />
-            {daysDropdown?.map((d, index) => (
-              <FormControlLabel
-                key={d.value}
-                control={
-                  <Checkbox checked={d.isChecked} name="checkedB" color="primary" onChange={e => onChechDays(e, index)} />
-                }
-                // style={{ display: 'block' }}
-                label={d.label}
+            <Grid item xs={12} sm={12}>
+              <AppTextInput
+                fullWidth
+                variant="outlined"
+                label="Description"
+                multiline
+                value={state.details}
+                onChange={e => {
+                  setState({ ...state, details: e.target.value });
+                }}
+                helperText={firstNameError}
               />
-            ))}
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography>Select Schedule</Typography>
-            <FormControlLabel
-              key="schedule"
-              control={
-                <Checkbox
-                  checked={isAllScheduleCheck}
-                  name="checkedB"
-                  color="primary"
-                  onChange={e => onChangeAllScheduleCheck(e)}
-                />
-              }
-              label="Select All"
-            />
+            </Grid>
 
-            {schedules?.map((sc, index) => (
+            <Grid item xs={12} sm={12}>
+              <TextField
+                fullWidth
+                className={classes.textField}
+                id="specialization"
+                select
+                label="Days"
+                value={state.daysId}
+                onChange={e => {
+                  onChangeDays(e);
+                }}
+                variant="outlined"
+                size="small">
+                <MenuItem value="">NONE</MenuItem>
+                {daysDropdown.map(option => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={12} container direction="row" justifyContent="flex-start" alignItems="center">
+              {/* <Typography>Select Schedule</Typography> */}
               <FormControlLabel
-                key={sc._id}
+                key="schedule"
                 control={
                   <Checkbox
-                    checked={sc.isChecked}
+                    checked={isAllScheduleCheck}
                     name="checkedB"
                     color="primary"
-                    onChange={e => onScheduleChange(e, index)}
+                    onChange={e => onChangeAllScheduleCheck(e)}
                   />
                 }
-                style={{ display: 'block' }}
-                label={`${sc.startTime}-${sc.endTime}`}
+                label="Select All"
               />
-            ))}
-          </Grid>
 
-          <Grid item xs={12} sm={6}>
-            <FormControlLabel
-              control={<Checkbox checked={false} name="checkedB" color="primary" />}
-              label="isActive"
-              disabled
-            />
-          </Grid>
-          <Grid item xs={6} sm={6}>
-            <Button variant="contained" color="primary" size="small" onClick={handleSubmit}>
-              Submit
-            </Button>
-          </Grid>
-        </GridContainer>
+              {schedules?.map((sc, index) => (
+                <FormControlLabel
+                  key={sc._id}
+                  control={
+                    <Checkbox
+                      checked={sc.isChecked}
+                      name="checkedB"
+                      color="primary"
+                      onChange={e => onScheduleChange(e, index)}
+                    />
+                  }
+                  style={{ display: 'block' }}
+                  label={`${sc.startTime}-${sc.endTime}`}
+                />
+              ))}
+            </Grid>
+            <Grid container direction="row" justifyContent="flex-end" alignItems="center">
+              <Button variant="contained" color="primary" size="small" onClick={e => handleAddDaysAndSchedule(e)}>
+                Add
+              </Button>
+            </Grid>
+
+            <Grid item xs={12} sm={12}>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Day</TableCell>
+                      <TableCell>Schedule</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {selectedDaysAndSchedule?.map((dac, index) => (
+                      <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }} key={index}>
+                        <TableCell>{dac.daysName}</TableCell>
+                        <TableCell>
+                          {dac.schedule.map(sc => (
+                            <Fragment key={sc.scheduleId}>
+                              <span>{sc.scheduleName}</span>
+                              <br></br>
+                            </Fragment>
+                          ))}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControlLabel
+                control={<Checkbox checked={false} name="checkedB" color="primary" />}
+                label="isActive"
+                disabled
+              />
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <Button variant="contained" color="primary" size="small" onClick={handleSubmit}>
+                Submit
+              </Button>
+            </Grid>
+          </GridContainer>
+        </form>
       </Paper>
     </Box>
   );

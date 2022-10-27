@@ -97,7 +97,11 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [ ">0.2%", "not dead", "not op_mini all" ],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "ie 11",
       "last 1 chrome version",
@@ -129,7 +133,11 @@
     }
   },
   "lint-staged": {
-    "*.+(js|jsx)": [ "eslint --fix" ],
-    "*.+(js|jsx|json|css|md)": [ "prettier --write" ]
+    "*.+(js|jsx)": [
+      "eslint --fix"
+    ],
+    "*.+(js|jsx|json|css|md)": [
+      "prettier --write"
+    ]
   }
 }
