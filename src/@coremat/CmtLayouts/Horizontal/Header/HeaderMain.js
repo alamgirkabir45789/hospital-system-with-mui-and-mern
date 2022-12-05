@@ -1,6 +1,6 @@
+import React from 'react';
 import { Box, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import React from 'react';
 
 const useStyles = makeStyles(theme => ({
   headerMain: {
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 const CmtHeaderMain = ({ children, ...rest }) => {
   const classes = useStyles();
   return (
-    <Box style={{ background: 'white' }} className={clsx(classes.headerMain, 'Cmt-headerMain')} {...rest}>
+    <Box className={clsx(classes.headerMain, 'Cmt-headerMain')} {...rest}>
       <div className="Cmt-container">{children}</div>
     </Box>
   );

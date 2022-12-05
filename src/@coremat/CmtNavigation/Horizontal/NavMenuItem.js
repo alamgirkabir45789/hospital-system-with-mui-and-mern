@@ -1,9 +1,9 @@
-import { List } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import clsx from 'clsx';
 import React, { cloneElement, isValidElement } from 'react';
+import { List } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import Box from '@material-ui/core/Box';
+import clsx from 'clsx';
 
 const useStyles = makeStyles(theme => ({
   navMenuLink: {

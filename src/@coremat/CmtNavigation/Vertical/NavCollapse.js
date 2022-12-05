@@ -1,14 +1,16 @@
+import React, { cloneElement, isValidElement, useEffect, useCallback, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+import clsx from 'clsx';
+
 import { Collapse, List, ListItem } from '@material-ui/core';
-import makeStyles from '@material-ui/core/styles/makeStyles';
 import IconExpandLess from '@material-ui/icons/ExpandLess';
 import IconExpandMore from '@material-ui/icons/ExpandMore';
-import clsx from 'clsx';
-import React, { cloneElement, isValidElement, useCallback, useContext, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { isUrlInChildren } from '../../CmtHelpers/JssHelper';
-import SidebarThemeContext from '../../CmtLayouts/SidebarThemeContext/SidebarThemeContext';
-import NavMenuItem from './NavMenuItem';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
 import NavSection from './NavSection';
+import NavMenuItem from './NavMenuItem';
+import SidebarThemeContext from '../../CmtLayouts/SidebarThemeContext/SidebarThemeContext';
+import { isUrlInChildren } from '../../CmtHelpers/JssHelper';
 
 const useStyles = makeStyles(theme => ({
   navCollapseBtn: {

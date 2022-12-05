@@ -1,21 +1,23 @@
+import React, { useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import { AuhMethods } from '../../../services/auth';
+
+import AppContext from '../contextProvider/AppContextProvider/AppContext';
 import globalStyles from '../../../theme/GlobalCss';
+import { useDispatch, useSelector } from 'react-redux';
+import { AuhMethods } from '../../../services/auth';
 import { CurrentAuthMethod } from '../../constants/AppConstants';
 import { LAYOUT_TYPES } from '../../constants/ThemeOptions';
-import AppContext from '../contextProvider/AppContextProvider/AppContext';
-import HorizontalDark from './HorizontalLayouts/HorizontalDark';
-import HorizontalDefault from './HorizontalLayouts/HorizontalDefault';
-import HorizontalMinimal from './HorizontalLayouts/HorizontalMinimal';
-import HorizontalTopMenu from './HorizontalLayouts/HorizontalTopMenu';
-import MinimalNoHeader from './VerticalLayouts/MinimalNoHeader';
-import ModernSideBar from './VerticalLayouts/ModernSidebar';
 import VerticalDefault from './VerticalLayouts/VerticalDefault';
 import VerticalMinimal from './VerticalLayouts/VerticalMinimal';
+import MinimalNoHeader from './VerticalLayouts/MinimalNoHeader';
+import ModernSideBar from './VerticalLayouts/ModernSidebar';
+import HorizontalDefault from './HorizontalLayouts/HorizontalDefault';
+import HorizontalDark from './HorizontalLayouts/HorizontalDark';
+import HorizontalMinimal from './HorizontalLayouts/HorizontalMinimal';
+import HorizontalTopMenu from './HorizontalLayouts/HorizontalTopMenu';
 
 const useStyles = makeStyles(() => ({
   circularProgressRoot: {
@@ -35,7 +37,6 @@ const useStyles = makeStyles(() => ({
 const AppLayout = ({ children }) => {
   const [showLayoutLoader, setLayoutLoader] = useState(true);
   const { layout } = useContext(AppContext);
-
   const { loadUser } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
   const classes = useStyles();

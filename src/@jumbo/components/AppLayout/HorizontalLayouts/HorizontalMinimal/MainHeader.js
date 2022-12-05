@@ -1,7 +1,9 @@
-import { Box, darken, Hidden, Toolbar } from '@material-ui/core';
+import IntlMessages from '@jumbo/utils/IntlMessages';
+import { Box, darken, Hidden, Toolbar, Typography } from '@material-ui/core';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import { PostAdd } from '@material-ui/icons';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import SidebarToggleHandler from '../../../../../@coremat/CmtLayouts/Horizontal/SidebarToggleHandler';
 import CmtHorizontal from '../../../../../@coremat/CmtNavigation/Horizontal';
 import Logo from '../../partials/Logo';
@@ -62,128 +64,166 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const MainHeader = () => {
-  // const { authUser } = useSelector(({ auth }) => auth);
   const classes = useStyles();
-
-  const minimalHorizontalMenus = [
+  const { userPermission } = useSelector(({ auth }) => auth);
+  const { authUser } = useSelector(({ auth }) => auth);
+  console.log(authUser, userPermission);
+  const minimalHorizont = [
     {
-      name: 'Home',
+      name: <IntlMessages id={'Home'} />,
       type: 'collapse',
       children: [
         {
-          name: 'Test1',
+          name: <IntlMessages id={'pages.samplePage'} />,
           type: 'item',
           icon: <PostAdd />,
           link: '/sample-page',
         },
+      ],
+    },
+    {
+      name: <IntlMessages id={'About'} />,
+      type: 'collapse',
+      children: [
+        // {
+        //   name: <IntlMessages id={'Dashboard'} />,
+        //   type: 'item',
+        //   icon: <PostAdd />,
+        //   link: '/dashboard',
+        // },
         {
-          name: 'Test5',
+          name: <IntlMessages id={'About'} />,
+          type: 'item',
+          icon: <PostAdd />,
+          link: '/about',
+        },
+      ],
+    },
+    authUser
+      ? {
+          name: <IntlMessages id={'Appointment'} />,
           type: 'collapse',
           children: [
             {
-              name: 'Test6',
+              name: <IntlMessages id={'Add patient'} />,
               type: 'item',
               icon: <PostAdd />,
-              link: '/sample-page',
+              link: '/appointment/new-appointment',
             },
+
             {
-              name: 'Test 7',
+              name: <IntlMessages id={'Patient List'} />,
               type: 'item',
               icon: <PostAdd />,
-              link: '/sample-page',
+              link: '/appointment',
             },
           ],
-        },
-        {
-          name: 'Test 8',
-          type: 'item',
-          icon: <PostAdd />,
-          link: '/sample-page',
-        },
-        {
-          name: 'Test2',
-          type: 'item',
-          icon: <PostAdd />,
-          link: '/test-page',
-        },
-      ],
-    },
-    {
-      name: 'Department',
-      type: 'collapse',
-      children: [
-        {
-          name: 'Medicine',
-          type: 'item',
-          icon: <PostAdd />,
-          link: '/sample-page',
-        },
+        }
+      : {},
+    authUser
+      ? {
+          name: <IntlMessages id={'User'} />,
+          type: 'collapse',
+          children: [
+            {
+              name: <IntlMessages id={'Add User'} />,
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/user/new-user',
+            },
 
-        {
-          name: 'Surgery',
-          type: 'item',
-          icon: <PostAdd />,
-          link: '/test-page',
-        },
-      ],
-    },
-    {
-      name: 'Doctor',
-      type: 'collapse',
-      children: [
-        {
-          name: 'Doctor Add',
-          type: 'item',
-          icon: <PostAdd />,
-          link: '/doctor-list',
-        },
-      ],
-    },
-    {
-      name: 'Services',
-      type: 'collapse',
-      children: [
-        {
-          name: 'Medicine',
-          type: 'item',
-          icon: <PostAdd />,
-          link: '/sample-page',
-        },
+            {
+              name: <IntlMessages id={'User List'} />,
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/user',
+            },
+          ],
+        }
+      : {},
+    authUser
+      ? {
+          name: <IntlMessages id={'Doctor'} />,
+          type: 'collapse',
+          children: [
+            {
+              name: <IntlMessages id={'Add Doctor'} />,
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/doctor/new-doctor',
+            },
 
-        {
-          name: 'Surgery',
-          type: 'item',
-          icon: <PostAdd />,
-          link: '/test-page',
-        },
-      ],
-    },
+            {
+              name: <IntlMessages id={'Doctor List'} />,
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/doctor',
+            },
+          ],
+        }
+      : {},
+    authUser
+      ? {
+          name: <IntlMessages id={'Department'} />,
+          type: 'collapse',
+          children: [
+            {
+              name: <IntlMessages id={' Department List'} />,
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/department',
+            },
+          ],
+        }
+      : {},
+    authUser
+      ? {
+          name: <IntlMessages id={'Schedule'} />,
+          type: 'collapse',
+          children: [
+            {
+              name: <IntlMessages id={'Schedule List'} />,
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/schedule',
+            },
+          ],
+        }
+      : {},
+    authUser
+      ? {
+          name: <IntlMessages id={'Role'} />,
+          type: 'collapse',
+          children: [
+            {
+              name: <IntlMessages id={'Role List'} />,
+              type: 'item',
+              icon: <PostAdd />,
+              link: '/role',
+            },
+          ],
+        }
+      : {},
     {
-      name: 'Home2',
+      name: <IntlMessages id={'Contact'} />,
       type: 'collapse',
       children: [
         {
-          name: 'Test1',
+          name: <IntlMessages id={'Dashboard'} />,
           type: 'item',
           icon: <PostAdd />,
-          link: '/sample-page',
-        },
-
-        {
-          name: 'Test2',
-          type: 'item',
-          icon: <PostAdd />,
-          link: '/test-page',
+          link: '/dashboard',
         },
       ],
     },
   ];
+
   return (
-    <Toolbar className={classes.root} style={{ color: 'black' }}>
+    <Toolbar className={classes.root}>
       <SidebarToggleHandler edge="start" color="inherit" aria-label="menu" />
-      <Logo mr={{ xs: 2, sm: 4, lg: 6, xl: 8 }} color="black" />
+      <Logo mr={{ xs: 2, sm: 4, lg: 6, xl: 8 }} color="white" />
       <Hidden mdDown>
-        <CmtHorizontal menuItems={minimalHorizontalMenus} />
+        <CmtHorizontal menuItems={minimalHorizont} />
       </Hidden>
 
       <Box display="flex" alignItems="center" ml="auto">
@@ -191,10 +231,12 @@ const MainHeader = () => {
         {/* <AppsMenu /> */}
         {/* <HeaderMessages /> */}
         {/* <HeaderNotifications /> */}
-        {/* <Box className={clsx(classes.langRoot, 'Cmt-i18n-switch')}>
+        {/* <Box className={clsx(classes.langRoot, 'Cmt-i18
+        n-switch')}>
           <LanguageSwitcher />
         </Box> */}
         <UserDropDown />
+        <Typography component="div">{authUser?.name}</Typography>
       </Box>
     </Toolbar>
   );

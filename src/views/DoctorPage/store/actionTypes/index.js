@@ -1,0 +1,2 @@
+export const FETCH_DOCTORS = 'FETCH_DOCTORS';
+export const FETCH_DOCTOR_BY_ID = 'FETCH_DOCTOR_BY_ID';

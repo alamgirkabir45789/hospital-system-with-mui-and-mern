@@ -1,17 +1,17 @@
-import { Box, InputBase } from '@material-ui/core';
-import Hidden from '@material-ui/core/Hidden';
-import { alpha } from '@material-ui/core/styles';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import Toolbar from '@material-ui/core/Toolbar';
-import SearchIcon from '@material-ui/icons/Search';
 import React from 'react';
 import SidebarToggleHandler from '../../../../../@coremat/CmtLayouts/Vertical/SidebarToggleHandler';
+import Toolbar from '@material-ui/core/Toolbar';
+import { Box, InputBase } from '@material-ui/core';
+import { alpha } from '@material-ui/core/styles';
 import LanguageSwitcher from '../LanguageSwitcher';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import SearchIcon from '@material-ui/icons/Search';
+import AppsMenu from './AppsMenu';
+import HeaderNotifications from './HeaderNotifications';
+import HeaderMessages from './HeaderMessages';
+import Hidden from '@material-ui/core/Hidden';
 import Logo from '../Logo';
 import SearchPopover from '../SearchPopover';
-import AppsMenu from './AppsMenu';
-import HeaderMessages from './HeaderMessages';
-import HeaderNotifications from './HeaderNotifications';
 
 const useStyles = makeStyles(theme => ({
   root: {

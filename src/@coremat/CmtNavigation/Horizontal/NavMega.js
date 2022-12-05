@@ -1,12 +1,14 @@
+import React, { cloneElement, isValidElement, useEffect, useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
+import clsx from 'clsx';
+
 import { List, ListItem } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import clsx from 'clsx';
-import React, { cloneElement, isValidElement, useEffect, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
-import { isUrlInChildren } from '../../CmtHelpers/JssHelper';
-import useStyles from './NavMega.style';
+
 import NavMenuItem from './NavMenuItem';
+import useStyles from './NavMega.style';
+import { isUrlInChildren } from '../../CmtHelpers/JssHelper';
 
 const RenderIcon = ({ icon }) => {
   const classes = useStyles();

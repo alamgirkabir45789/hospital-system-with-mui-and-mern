@@ -1,6 +1,7 @@
-import { makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
 import React from 'react';
+import clsx from 'clsx';
+
+import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   appHeader: {
@@ -9,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     transition: 'all 0.3s ease',
-    backgroundColor: 'black',
+    backgroundColor: 'transparent',
     color: theme.palette.text.primary,
     boxShadow: '0 1px 8px -1px rgba(0,0,0,.2)',
     position: 'relative',

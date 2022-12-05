@@ -1,13 +1,13 @@
-import { List, ListItem } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import clsx from 'clsx';
 import React, { cloneElement, isValidElement, useEffect, useMemo } from 'react';
+import { List, ListItem } from '@material-ui/core';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { useHistory } from 'react-router-dom';
-import { isUrlInChildren } from '../../CmtHelpers/JssHelper';
-import useStyles from './NavCollapse.style';
 import NavMenuItem from './NavMenuItem';
+import useStyles from './NavCollapse.style';
+import clsx from 'clsx';
+import Box from '@material-ui/core/Box';
+import { isUrlInChildren } from '../../CmtHelpers/JssHelper';
 
 const NavCollapse = props => {
   const history = useHistory();

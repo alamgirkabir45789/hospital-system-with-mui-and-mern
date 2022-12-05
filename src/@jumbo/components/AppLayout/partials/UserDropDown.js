@@ -35,10 +35,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UserDropDown = () => {
-  const { authUser } = useSelector(({ auth }) => auth);
-  const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { authUser } = useSelector(({ auth }) => auth);
   const actionsList = [
     {
       icon: <PersonIcon />,

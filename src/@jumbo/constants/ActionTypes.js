@@ -82,3 +82,6 @@ export const SET_USER_DETAILS = 'SET_USER_DETAILS';
 export const EDIT_USER = 'EDIT_USER';
 export const DELETE_USER = 'DELETE_USER';
 export const DELETE_BULK_USERS = 'DELETE_BULK_USERS';
+
+//For Permission and User
+export const SAVE_PERMISSION = 'save_user_permission';

@@ -1,17 +1,18 @@
+import { Box } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import { alpha, makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Box } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import IntlMessages from '../../../utils/IntlMessages';
-import Button from '@material-ui/core/Button';
-import { AuhMethods } from '../../../../services/auth';
-import ContentLoader from '../../ContentLoader';
-import { alpha, makeStyles } from '@material-ui/core/styles';
-import CmtImage from '../../../../@coremat/CmtImage';
-import Typography from '@material-ui/core/Typography';
-import { CurrentAuthMethod } from '../../../constants/AppConstants';
-import AuthWrapper from './AuthWrapper';
 import { NavLink } from 'react-router-dom';
+import { createUser } from 'views/Account/Login/store/actions/action';
+import CmtImage from '../../../../@coremat/CmtImage';
+import { AuhMethods } from '../../../../services/auth';
+import { CurrentAuthMethod } from '../../../constants/AppConstants';
+import IntlMessages from '../../../utils/IntlMessages';
+import ContentLoader from '../../ContentLoader';
+import AuthWrapper from './AuthWrapper';
 
 const useStyles = makeStyles(theme => ({
   authThumb: {
@@ -63,15 +64,31 @@ const useStyles = makeStyles(theme => ({
 
 //variant = 'default', 'standard', 'bgColor'
 const SignUp = ({ method = CurrentAuthMethod, variant = 'default', wrapperVariant = 'default' }) => {
-  const [name, setName] = useState('Demo User');
-  const [email, setEmail] = useState('demo@example.com');
-  const [password, setPassword] = useState('demo#123');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [contactNo, setContactNo] = useState('');
+  const [password, setPassword] = useState('');
+  // const [name, setName] = useState('Demo User');
+  // const [email, setEmail] = useState('demo@example.com');
+  // const [contactNo, setContactNo] = useState('')
+  // const [password, setPassword] = useState('demo#123');
   const dispatch = useDispatch();
   const classes = useStyles({ variant });
 
   const onSubmit = () => {
-    dispatch(AuhMethods[method].onRegister({ name, email, password }));
+    const payload = {
+      name: name,
+      email: email,
+      contactNo: contactNo,
+      password: password,
+      isChecked: false,
+    };
+    dispatch(AuhMethods[method].onRegister({ payload }));
+    dispatch(createUser(payload));
   };
+  // const onSubmit = () => {
+  //   dispatch(AuhMethods[method].onRegister({ name, email, password }));
+  // };
 
   return (
     <AuthWrapper variant={wrapperVariant}>
@@ -93,7 +110,7 @@ const SignUp = ({ method = CurrentAuthMethod, variant = 'default', wrapperVarian
               label={<IntlMessages id="appModule.name" />}
               fullWidth
               onChange={event => setName(event.target.value)}
-              defaultValue={name}
+              value={name}
               margin="normal"
               variant="outlined"
               className={classes.textFieldRoot}
@@ -104,7 +121,18 @@ const SignUp = ({ method = CurrentAuthMethod, variant = 'default', wrapperVarian
               label={<IntlMessages id="appModule.email" />}
               fullWidth
               onChange={event => setEmail(event.target.value)}
-              defaultValue={email}
+              value={email}
+              margin="normal"
+              variant="outlined"
+              className={classes.textFieldRoot}
+            />
+          </Box>
+          <Box mb={2}>
+            <TextField
+              label="Contact No"
+              fullWidth
+              onChange={event => setContactNo(event.target.value)}
+              value={contactNo}
               margin="normal"
               variant="outlined"
               className={classes.textFieldRoot}
@@ -116,7 +144,7 @@ const SignUp = ({ method = CurrentAuthMethod, variant = 'default', wrapperVarian
               label={<IntlMessages id="appModule.password" />}
               fullWidth
               onChange={event => setPassword(event.target.value)}
-              defaultValue={password}
+              value={password}
               margin="normal"
               variant="outlined"
               className={classes.textFieldRoot}

@@ -1,9 +1,9 @@
+import React, { useContext } from 'react';
+import FooterLogo from './FooterLogo';
 import { Box, makeStyles } from '@material-ui/core';
 import Hidden from '@material-ui/core/Hidden';
-import React, { useContext } from 'react';
-import { THEME_TYPES } from '../../../constants/ThemeOptions';
 import AppContext from '../../contextProvider/AppContextProvider/AppContext';
-import FooterLogo from './FooterLogo';
+import { THEME_TYPES } from '../../../constants/ThemeOptions';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,7 +31,7 @@ const Footer = props => {
           <FooterLogo mr={5} color={themeType === THEME_TYPES.DARK ? 'white' : ''} />
         </Hidden>
         <Box fontSize={{ xs: 12, sm: 14 }} component="p" color="text.disabled">
-          Copyright Alamgir kabir © {date.getFullYear()}
+          Copyright Company Name © {date.getFullYear()}
         </Box>
       </Box>
     </Box>

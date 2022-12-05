@@ -1,8 +1,10 @@
-import { makeStyles } from '@material-ui/core';
-import AppBar from '@material-ui/core/AppBar';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import React from 'react';
+
+import PropTypes from 'prop-types';
+import clsx from 'clsx';
+
+import AppBar from '@material-ui/core/AppBar';
+import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   appHeader: {

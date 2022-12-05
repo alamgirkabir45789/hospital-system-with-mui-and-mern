@@ -1,4 +1,9 @@
-import { SEND_FORGET_PASSWORD_EMAIL, UPDATE_AUTH_USER, UPDATE_LOAD_USER } from '../../@jumbo/constants/ActionTypes';
+import {
+  SAVE_PERMISSION,
+  SEND_FORGET_PASSWORD_EMAIL,
+  UPDATE_AUTH_USER,
+  UPDATE_LOAD_USER,
+} from '../../@jumbo/constants/ActionTypes';
 
 export const setAuthUser = user => {
   return dispatch => {
@@ -14,6 +19,15 @@ export const updateLoadUser = loading => {
     dispatch({
       type: UPDATE_LOAD_USER,
       payload: loading,
+    });
+  };
+};
+
+export const saveUserPermission = permission => {
+  return dispatch => {
+    dispatch({
+      type: SAVE_PERMISSION,
+      payload: permission,
     });
   };
 };

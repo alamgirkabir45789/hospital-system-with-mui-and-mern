@@ -170,3 +170,7 @@ export const getTimeDiffString = (date, format = 'DD MMM, YYYY', suffix = '') =>
       return postDate.format(format);
   }
 };
+export const timeDiff = (to, from) => {
+  const duration = moment(to, 'HH:mm:A').diff(moment(from, 'HH:mm:A'), 'minutes');
+  return duration;
+};

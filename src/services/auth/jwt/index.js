@@ -1,6 +1,6 @@
+import React from 'react';
 import { fetchError, fetchStart, fetchSuccess } from '../../../redux/actions';
 import { setAuthUser, setForgetPassMailSent, updateLoadUser } from '../../../redux/actions/Auth';
-import React from 'react';
 import axios from './config';
 
 const JWTAuth = {
@@ -43,6 +43,7 @@ const JWTAuth = {
               localStorage.setItem('token', data.token.access_token);
               axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.token.access_token;
               dispatch(fetchSuccess());
+              // dispatch(saveUserPermission(getto));
               dispatch(JWTAuth.getAuthUser(true, data.token.access_token));
             } else {
               dispatch(fetchError(data.error));

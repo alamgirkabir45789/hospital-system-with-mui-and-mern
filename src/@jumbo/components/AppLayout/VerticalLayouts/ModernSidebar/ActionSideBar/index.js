@@ -61,7 +61,6 @@ const actionsList = [
 
 let initSidebarWidth = 0;
 const ActionSideBar = ({ width }) => {
-  // const { authUser } = useSelector(({ auth }) => auth);
   const classes = useStyles();
   const dispatch = useDispatch();
   const [isDrawerOpen, setDrawerStatus] = useState(false);

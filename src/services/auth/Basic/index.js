@@ -1,31 +1,52 @@
-import axios from 'axios';
 import React from 'react';
+import { LOGIN_API } from 'services/api-end-points/login';
+import { baseAxios } from '..';
 import { fetchError, fetchStart, fetchSuccess } from '../../../redux/actions';
-import { setAuthUser, setForgetPassMailSent, updateLoadUser } from '../../../redux/actions/Auth';
+import { saveUserPermission, setAuthUser, setForgetPassMailSent, updateLoadUser } from '../../../redux/actions/Auth';
 
 const BasicAuth = {
-  onRegister: ({ name, email, password }) => {
+  onRegister: ({ payload }) => {
     return dispatch => {
       dispatch(fetchStart());
 
       setTimeout(() => {
         dispatch(fetchSuccess());
-        const user = { name: name, email: email, password: password };
+        const user = payload;
         localStorage.setItem('user', JSON.stringify(user));
         dispatch(setAuthUser(user));
       }, 300);
     };
   },
+  // onRegister: ({ name, email, password }) => {
+  //   return dispatch => {
+  //     dispatch(fetchStart());
+
+  //     setTimeout(() => {
+  //       dispatch(fetchSuccess());
+  //       const user = { name: name, email: email, password: password };
+  //       localStorage.setItem('user', JSON.stringify(user));
+  //       dispatch(setAuthUser(user));
+  //     }, 300);
+  //   };
+  // },
 
   onLogin: payload => {
     return async dispatch => {
-      const res = await axios.post('http://localhost:7000/api/login', payload);
+      console.log('hi');
+      const res = await baseAxios.post(LOGIN_API.login, payload);
+
       try {
         dispatch(fetchStart());
 
         setTimeout(() => {
-          const user = { name: res.data.user.role, email: res.data.user._doc.email, password: res.data.user._doc.password };
+          const user = {
+            name: res.data.user.role,
+            email: res.data.user._doc.email,
+            password: res.data.user._doc.password,
+            userPermission: 'Admin',
+          };
           dispatch(fetchSuccess());
+          dispatch(saveUserPermission(user.userPermission));
           localStorage.setItem('user', JSON.stringify(user));
           dispatch(setAuthUser(user));
         }, 300);
@@ -34,6 +55,29 @@ const BasicAuth = {
       }
     };
   },
+  // onLogin: ({ email, password }) => {
+  //   return dispatch => {
+  //     console.log('hi');
+  //     try {
+  //       dispatch(fetchStart());
+
+  //       setTimeout(() => {
+  //         const user = {
+  //           name: 'Admin',
+  //           email: email,
+  //           password: password,
+  //           userPermission: 'Admin',
+  //         };
+  //         dispatch(fetchSuccess());
+  //         dispatch(saveUserPermission(user.userPermission));
+  //         localStorage.setItem('user', JSON.stringify(user));
+  //         dispatch(setAuthUser(user));
+  //       }, 300);
+  //     } catch (error) {
+  //       dispatch(fetchError(error.message));
+  //     }
+  //   };
+  // },
   onLogout: () => {
     return dispatch => {
       dispatch(fetchStart());

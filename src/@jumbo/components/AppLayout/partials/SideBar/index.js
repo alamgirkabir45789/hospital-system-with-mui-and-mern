@@ -1,6 +1,8 @@
-import makeStyles from '@material-ui/core/styles/makeStyles';
 import React from 'react';
+
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
 import CmtVertical from '../../../../../@coremat/CmtNavigation/Vertical';
 import { sidebarNavs } from '../menus';
 

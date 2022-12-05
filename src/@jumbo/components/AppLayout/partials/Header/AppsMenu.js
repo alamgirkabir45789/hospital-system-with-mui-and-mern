@@ -1,19 +1,19 @@
+import React from 'react';
 import { Box, IconButton, Popover, Tooltip, useTheme } from '@material-ui/core';
 import { alpha, makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import AppsIcon from '@material-ui/icons/Apps';
-import ChatIcon from '@material-ui/icons/Chat';
+import EmailIcon from '@material-ui/icons/Email';
+import CmtCard from '../../../../../@coremat/CmtCard';
+import CmtCardHeader from '../../../../../@coremat/CmtCard/CmtCardHeader';
+import CmtCardContent from '../../../../../@coremat/CmtCard/CmtCardContent';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ContactMailIcon from '@material-ui/icons/ContactMail';
-import EmailIcon from '@material-ui/icons/Email';
-import clsx from 'clsx';
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import CmtAvatar from '../../../../../@coremat/CmtAvatar';
-import CmtCard from '../../../../../@coremat/CmtCard';
-import CmtCardContent from '../../../../../@coremat/CmtCard/CmtCardContent';
-import CmtCardHeader from '../../../../../@coremat/CmtCard/CmtCardHeader';
+import ChatIcon from '@material-ui/icons/Chat';
 import CmtGridView from '../../../../../@coremat/CmtGridView';
+import CmtAvatar from '../../../../../@coremat/CmtAvatar';
+import { useHistory } from 'react-router-dom';
+import clsx from 'clsx';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
   cardRoot: {

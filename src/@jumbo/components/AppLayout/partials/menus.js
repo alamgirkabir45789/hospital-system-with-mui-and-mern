@@ -13,12 +13,6 @@ export const sidebarNavs = [
         icon: <PostAdd />,
         link: '/sample-page',
       },
-      {
-        name: <IntlMessages id={'Test Page'} />,
-        type: 'item',
-        icon: <PostAdd />,
-        link: '/test-page',
-      },
     ],
   },
 ];
@@ -34,19 +28,13 @@ export const horizontalDefaultNavs = [
         icon: <PostAdd />,
         link: '/sample-page',
       },
-      {
-        name: <IntlMessages id={'Test Page'} />,
-        type: 'item',
-        icon: <PostAdd />,
-        link: '/test-page',
-      },
     ],
   },
 ];
 
 export const minimalHorizontalMenus = [
   {
-    name: <IntlMessages id={'sidebar.main'} />,
+    name: <IntlMessages id={'Home'} />,
     type: 'collapse',
     children: [
       {
@@ -55,11 +43,23 @@ export const minimalHorizontalMenus = [
         icon: <PostAdd />,
         link: '/sample-page',
       },
+    ],
+  },
+  {
+    name: <IntlMessages id={'Department'} />,
+    type: 'collapse',
+    children: [
       {
-        name: <IntlMessages id={'Test Page'} />,
+        name: <IntlMessages id={'Add Department'} />,
         type: 'item',
         icon: <PostAdd />,
-        link: '/test-page',
+        link: '/department/department-new',
+      },
+      {
+        name: <IntlMessages id={' Department List'} />,
+        type: 'item',
+        icon: <PostAdd />,
+        link: '/department/department-list',
       },
     ],
   },

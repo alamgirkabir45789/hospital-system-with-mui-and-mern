@@ -1,15 +1,15 @@
+import React, { useContext } from 'react';
 import { MenuItem, MenuList, Paper, Popover, Typography } from '@material-ui/core';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import CmtAvatar from '../../../../@coremat/CmtAvatar';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { useDispatch } from 'react-redux';
+import { AuhMethods } from '../../../../services/auth';
+import { CurrentAuthMethod } from '../../../constants/AppConstants';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonIcon from '@material-ui/icons/Person';
 import SettingsIcon from '@material-ui/icons/Settings';
-import React, { useContext } from 'react';
-import { useDispatch } from 'react-redux';
-import CmtAvatar from '../../../../@coremat/CmtAvatar';
 import SidebarThemeContext from '../../../../@coremat/CmtLayouts/SidebarThemeContext/SidebarThemeContext';
-import { AuhMethods } from '../../../../services/auth';
-import { CurrentAuthMethod } from '../../../constants/AppConstants';
 
 const useStyles = makeStyles(theme => ({
   root: {

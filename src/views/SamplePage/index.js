@@ -1,11 +1,18 @@
-import Customcarasoul from '@jumbo/components/custom/Customcarasoul';
-import CustomTab from '@jumbo/components/custom/CustomTab';
-import { Grid } from '@material-ui/core';
+import Customcarasoul from '@jumbo/utils/custom/Customcarasoul';
+import CustomTab from '@jumbo/utils/custom/CustomTab';
+import Grid from '@material-ui/core/Grid';
 import React from 'react';
 import AccordionMessage from 'views/accordion/AccordionMessage';
-import Appointment from 'views/Appointment/form/Appointment';
+import Appointment from 'views/Appointment/form/AppointmentAddForm';
 import GridContainer from '../../@jumbo/components/GridContainer';
 import PageContainer from '../../@jumbo/components/PageComponents/layouts/PageContainer';
+import IntlMessages from '../../@jumbo/utils/IntlMessages';
+
+const breadcrumbs = [
+  { label: <IntlMessages id={'sidebar.main'} />, link: '/' },
+  { label: <IntlMessages id={'pages.samplePage'} />, isActive: true },
+];
+
 const SamplePage = () => {
   return (
     <PageContainer>

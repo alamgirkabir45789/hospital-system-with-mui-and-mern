@@ -1,24 +1,24 @@
-import Hidden from '@material-ui/core/Hidden';
-import clsx from 'clsx';
 import React from 'react';
+import SideBar from '../../partials/SideBar';
 import CmtHorizontalLayout from '../../../../../@coremat/CmtLayouts/Horizontal';
-import CmtContent from '../../../../../@coremat/CmtLayouts/Horizontal/Content';
-import CmtFooter from '../../../../../@coremat/CmtLayouts/Horizontal/Footer';
-import CmtHeader from '../../../../../@coremat/CmtLayouts/Horizontal/Header';
-import CmtHeaderMain from '../../../../../@coremat/CmtLayouts/Horizontal/Header/HeaderMain';
 import CmtHeaderNav from '../../../../../@coremat/CmtLayouts/Horizontal/Header/HeaderNav';
 import CmtHeaderTop from '../../../../../@coremat/CmtLayouts/Horizontal/Header/HeaderTop';
-import CmtSidebar from '../../../../../@coremat/CmtLayouts/Horizontal/Sidebar';
-import CmtHorizontal from '../../../../../@coremat/CmtNavigation/Horizontal';
-import { HEADER_TYPE } from '../../../../constants/ThemeOptions';
-import ContentLoader from '../../../ContentLoader';
-import defaultContext from '../../../contextProvider/AppContextProvider/defaultContext';
-import Footer from '../../partials/Footer';
+import CmtHeaderMain from '../../../../../@coremat/CmtLayouts/Horizontal/Header/HeaderMain';
 import HeaderLogin from '../../partials/Header/HeaderLogin';
-import { horizontalDefaultNavs } from '../../partials/menus';
-import SideBar from '../../partials/SideBar';
-import HeaderMain from './HeaderMain';
+import ContentLoader from '../../../ContentLoader';
+import CmtHeader from '../../../../../@coremat/CmtLayouts/Horizontal/Header';
+import CmtSidebar from '../../../../../@coremat/CmtLayouts/Horizontal/Sidebar';
+import CmtContent from '../../../../../@coremat/CmtLayouts/Horizontal/Content';
 import useStyles from './index.style';
+import Hidden from '@material-ui/core/Hidden';
+import HeaderMain from './HeaderMain';
+import clsx from 'clsx';
+import CmtFooter from '../../../../../@coremat/CmtLayouts/Horizontal/Footer';
+import Footer from '../../partials/Footer';
+import { HEADER_TYPE } from '../../../../constants/ThemeOptions';
+import defaultContext from '../../../contextProvider/AppContextProvider/defaultContext';
+import { horizontalDefaultNavs } from '../../partials/menus';
+import CmtHorizontal from '../../../../../@coremat/CmtNavigation/Horizontal';
 
 const layoutOptions = {
   showFooter: true,

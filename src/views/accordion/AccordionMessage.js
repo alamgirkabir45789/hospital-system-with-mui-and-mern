@@ -19,13 +19,15 @@ const useStyles = makeStyles(theme => ({
     fontWeight: theme.typography.fontWeightRegular,
   },
 }));
+
 const AccordionMessage = () => {
   const classes = useStyles();
+
   return (
     <Box className={classes.root}>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-          <Typography className={classes.heading}>Accordion 1</Typography>
+          <Typography className={classes.heading}>X-Ray</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
@@ -36,7 +38,7 @@ const AccordionMessage = () => {
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-          <Typography className={classes.heading}>Accordion 2</Typography>
+          <Typography className={classes.heading}>ECG</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
@@ -47,7 +49,7 @@ const AccordionMessage = () => {
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-          <Typography className={classes.heading}>Accordion 2</Typography>
+          <Typography className={classes.heading}>UltraSonography</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
@@ -57,11 +59,11 @@ const AccordionMessage = () => {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion disabled>
+      {/* <Accordion disabled>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
           <Typography className={classes.heading}>Disabled Accordion</Typography>
         </AccordionSummary>
-      </Accordion>
+      </Accordion> */}
     </Box>
   );
 };

@@ -1,8 +1,15 @@
-import { SEND_FORGET_PASSWORD_EMAIL, UPDATE_AUTH_USER, UPDATE_LOAD_USER } from '../../@jumbo/constants/ActionTypes';
+import {
+  SAVE_PERMISSION,
+  SEND_FORGET_PASSWORD_EMAIL,
+  UPDATE_AUTH_USER,
+  UPDATE_LOAD_USER,
+} from '../../@jumbo/constants/ActionTypes';
 
 const INIT_STATE = {
   authUser: null,
   loadUser: false,
+  userPermission: 'Admin',
+  role: ['ADMIN', 'USER', 'DOCTOR', 'HR'],
   send_forget_password_email: false,
 };
 
@@ -25,6 +32,12 @@ export default (state = INIT_STATE, action) => {
       return {
         ...state,
         send_forget_password_email: action.payload,
+      };
+    }
+    case SAVE_PERMISSION: {
+      return {
+        ...state,
+        userPermission: action.payload,
       };
     }
     default:

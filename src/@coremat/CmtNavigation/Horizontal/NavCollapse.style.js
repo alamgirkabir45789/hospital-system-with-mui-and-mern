@@ -17,8 +17,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
 
     '&.active > .Cmt-navCollapseBtn': {
-      // color: theme.palette.horizontalNav.navigationActiveColor,
-      color: 'black',
+      color: theme.palette.horizontalNav.navigationActiveColor,
     },
 
     '&.active > .Cmt-navCollapseBtn $subCollapse .Cmt-navCollapseBtn.active': {

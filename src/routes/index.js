@@ -2,13 +2,19 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router';
 import { useLocation } from 'react-router-dom';
-import DoctorAddForm from 'views/Doctor/form/DoctorAddForm';
+import UserAccount from 'views/Account/Register';
+import Appointment from 'views/Appointment';
+import Department from 'views/DepartmentPage';
+import Doctor from 'views/DoctorPage';
+import Role from 'views/Role';
+import Schedule from 'views/Schedule';
 import Error404 from '../views/404';
+import About from '../views/About';
+import Login from '../views/Account/Login/form/Login';
+import Register from '../views/Account/Register/form/Register';
+import Dashboard from '../views/Dashboard';
 import SamplePage from '../views/SamplePage';
-import TestPage from '../views/TestPage/TestPage';
 import ForgotPasswordPage from './Auth/ForgotPassword';
-import Login from './Auth/Login';
-import Register from './Auth/Register';
 
 const RestrictedRoute = ({ component: Component, ...rest }) => {
   const { authUser } = useSelector(({ auth }) => auth);
@@ -38,16 +44,26 @@ const Routes = () => {
   if (location.pathname === '' || location.pathname === '/') {
     return <Redirect to={'/sample-page'} />;
   } else if (authUser && location.pathname === '/signin') {
-    return <Redirect to={'/sample-page'} />;
+    return <Redirect to={'/user'} />;
   }
+  // if (location.pathname === '' || location.pathname === '/') {
+  //   return <Redirect to={'/department'} />;
+  // } else if (authUser && location.pathname === '/signin') {
+  //   return <Redirect to={'/department'} />;
+  // }
 
   return (
     <React.Fragment>
       <Switch>
         <Route path="/sample-page" component={SamplePage} />
-        {/* <RestrictedRoute path="/admin" component={AdminPage} /> */}
-        <Route path="/doctor-list" component={DoctorAddForm} />
-        <Route path="/test-page" component={TestPage} />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/about" component={About} />
+        <RestrictedRoute path="/user" component={UserAccount} />
+        <RestrictedRoute path="/role" component={Role} />
+        <RestrictedRoute path="/department" component={Department} />
+        <RestrictedRoute path="/doctor" component={Doctor} />
+        <RestrictedRoute path="/schedule" component={Schedule} />
+        <RestrictedRoute path="/appointment" component={Appointment} />
         <Route path="/signin" component={Login} />
         <Route path="/signup" component={Register} />
         <Route path="/forgot-password" component={ForgotPasswordPage} />

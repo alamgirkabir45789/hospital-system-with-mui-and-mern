@@ -1,17 +1,20 @@
-import clsx from 'clsx';
 import React from 'react';
-import CmtVerticalLayout from '../../../../../@coremat/CmtLayouts/Vertical';
-import CmtContent from '../../../../../@coremat/CmtLayouts/Vertical/Content';
+
+import clsx from 'clsx';
+
 import CmtFooter from '../../../../../@coremat/CmtLayouts/Vertical/Footer';
+import CmtVerticalLayout from '../../../../../@coremat/CmtLayouts/Vertical';
 import CmtHeader from '../../../../../@coremat/CmtLayouts/Vertical/Header';
 import CmtSidebar from '../../../../../@coremat/CmtLayouts/Vertical/Sidebar';
-import { SIDEBAR_TYPE } from '../../../../constants/ThemeOptions';
-import ContentLoader from '../../../ContentLoader';
-import defaultContext from '../../../contextProvider/AppContextProvider/defaultContext';
-import Footer from '../../partials/Footer';
+import CmtContent from '../../../../../@coremat/CmtLayouts/Vertical/Content';
+
 import Header from '../../partials/Header';
-import SideBar from '../../partials/SideBar';
 import SidebarHeader from '../../partials/SidebarHeader';
+import SideBar from '../../partials/SideBar';
+import ContentLoader from '../../../ContentLoader';
+import { SIDEBAR_TYPE } from '../../../../constants/ThemeOptions';
+import Footer from '../../partials/Footer';
+import defaultContext from '../../../contextProvider/AppContextProvider/defaultContext';
 
 const layoutOptions = {
   headerType: defaultContext.headerType,
